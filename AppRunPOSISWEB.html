@@ -1,0 +1,346 @@
+<!doctype html>
+<html ng-app="apiFabio">
+  <head>
+			
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>			
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+				
+  </head>
+  <body>
+     <script>
+  
+	  angular.module('apiFabio', [])
+	  .controller('appCtrl', ['$scope', '$http',
+	  function($scope, $http) {
+		  
+		   // mostrar form
+		   $scope.mostrar_form_corrida = false;
+		   $scope.mostrar_form_corredor = false;
+		   
+		   $scope.msgApi = "";
+
+		   // lista de corridas
+		   $scope.corridas = [];
+	           
+		   // lista de corredores
+		   $scope.corredores = [];		  
+			  
+		   // estrutura api
+		   $scope.corrida  = {idcorrida:"", nome:"", descricao:"", data:"", cidade:"", estado:"", valorinscricao:"", status:""};
+		   $scope.corredor = {idcorredor:"", nome:"", datanascimento:"", cidade:"", estado:"", status:""};
+		   
+		   
+		  
+		         // excluir dados corridas webservice
+		         $scope.deletar_dados_corridas = function(opcao){
+			  
+			  $http({method: "DELETE", url: "http://www.ceolato.com.br/wsg4server/corridas/"+[opcao]}).
+							  success(function(data, status) {
+							                  $scope.corridas = [data];
+									  console.log($scope.corridas);
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Não foi possível excluir dados...";
+							  });	 
+			 };
+				     
+				     
+				     
+		          // busca dados corridas webservice
+			  $scope.buscar_dados_corridas = function(opcao){
+			    
+			           $scope.mostrar_form_corredor = false;
+				   $scope.mostrar_form_corrida = false;
+				   
+				   
+				   console.log(opcao);
+				   if(opcao == "a"){ 
+				      
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corridas"}).
+							  success(function(data, status) {
+									  $scope.corridas = data.corridas;
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+					  
+	                            }else if(opcao == "b"){
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corridas/abertas"}).
+							  success(function(data, status) {
+									  $scope.corridas = data.corridas;
+									  console.log($scope.corridas);  
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+					
+				    }else if(opcao == "c"){
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corridas/ultimas"}).
+							  success(function(data, status) {
+									  $scope.corridas = data.corridas;
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+					  
+				      
+				    }else if(opcao == "d"){
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corridas/proximas"}).
+							  success(function(data, status) {
+									  $scope.corridas = data.corridas;
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+					  
+				     }else{
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corridas/"+[opcao]}).
+							  success(function(data, status) {
+							                  $scope.corridas = [data];
+									  console.log($scope.corridas);
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	 
+				     };
+				  };  
+			  
+			  $scope.cadastrar_corrida = function(){
+					  
+					  $http({method: "POST", url: "http://www.ceolato.com.br/wsg4server/corridas", data:$scope.corrida}).
+							  success(function(data, status) {
+								  
+                              $scope.msgApi = "Sucesso! Cadastro realizado.";
+				   }).error(function(data, status) {
+					      $scope.msgApi = "Erro ao cadastrar dados...";
+					      });	
+                 	   };
+					      
+			// excluir dados corredores webservice
+		         $scope.deletar_dados_corredores = function(opcao){
+			  
+			  $http({method: "DELETE", url: "http://www.ceolato.com.br/wsg4server/corredores/"+[opcao]}).
+							  success(function(data, status) {
+							                  $scope.corridas = [data];
+									  console.log($scope.corridas);
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Não foi possível excluir dados...";
+							  });	 
+			 };
+					      
+			// busca dados corridas webservice
+			  $scope.buscar_dados_corredores = function(opcao){
+				   $scope.mostrar_form_corrida = false;
+				   $scope.mostrar_form_corredor = false;
+				   
+				   
+				   console.log(opcao);
+				   if(opcao == "a"){ 
+				      
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corredores"}).
+							  success(function(data, status) {
+									  $scope.corredores = data.corredores;
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+					  
+	                            }else if(opcao == "b"){
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corredores/ativos"}).
+							  success(function(data, status) {
+									  $scope.corredores = data.corredores;
+									  console.log($scope.corredores);  
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	
+				     }else if(opcao == "c"){
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corredores/"+[opcao]+"/corridas"}).
+							  success(function(data, status) {
+									  $scope.corridas = [data];
+									  console.log($scope.corridas);  
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });		
+				  				  
+				     }else{
+				       $http({method: "GET", url: "http://www.ceolato.com.br/wsg4server/corredores/"+[opcao]}).
+							  success(function(data, status) {
+							                  $scope.corredores = [data];
+									  console.log($scope.corredores);
+							  }).error(function(data, status) {
+								   $scope.msgApi = "Erro ao buscar dados...";
+							  });	 
+				     };
+				  };  
+			  $scope.cadastrar_corredor = function(){
+					  
+					  $http({method: "POST", url: "http://www.ceolato.com.br/wsg4server/corredores", data:$scope.corredor}).
+							  success(function(data, status) {
+								  
+                          $scope.msgApi = "Sucesso! Cadastro realizado.";
+				}).error(function(data, status) {
+					      $scope.msgApi = "Erro ao cadastrar dados...";
+					      });	
+                 			      };
+		      }]);
+						      
+	  </script>
+
+				<div ng-controller="appCtrl">
+					
+					 <!--mensagens -->
+						<div style="color:red;">{{msgApi}}</div>
+					        
+					 <!-- Listar -->
+						<div class="container"> AppRunPOSISWEB
+						      						        
+							<div>
+							   <input name="idcorrida" ng-model="corrida.idcorrida" type="text" placeholder="Código Corrida" />
+							   <button  class="btn btn-primary" ng-click="buscar_dados_corridas(corrida.idcorrida)">Consultar</button>
+							   <button class="btn btn-primary" ng-click="mostrar_form_corrida=!mostrar_form_corrida;corredores=[];"> Cadastrar</button>
+							   <button class="btn btn-primary" ng-click="deletar_dados_corridas(corrida.idcorrida)"> Deletar</button>
+							</div>
+							<div>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corridas('a')"> Todas as Corridas</button>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corridas('c')"> Ultimas Corridas</button>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corridas('b')"> Corridas Abertas </button>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corridas('d')"> Próximas Corridas</button>
+							</div>
+							
+							<div class="row" ng-repeat="corrida in corridas">
+							        <div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>ID:</strong> {{corrida.idcorrida}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Nome Corrida:</strong> {{corrida.nome}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Cidade:</strong> {{corrida.cidade}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Status:</strong> {{corrida.status}}
+								</div>
+							</div>
+						</div>
+				
+				
+				                <div class="container">
+						      
+                         				<div>
+							   <input name="idcorredor" ng-model="corredor.idcorredor" type="text" placeholder="Código Corredor"/>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corredores(corredor.idcorredor)">Consultar</button>
+							   <button class="btn btn-primary" ng-click="mostrar_form_corredor=!mostrar_form_corredor;corridas=[];"> Cadastrar</button>
+							   <button class="btn btn-primary" ng-click="deletar_dados_corredores(corredor.idcorredor)"> Deletar</button> 	
+							</div>
+							<div>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corredores('a')"> Todos os Corredores</button>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corredores('b')"> Corredores Ativos</button>
+							   <button class="btn btn-primary" ng-click="buscar_dados_corredores('c');"> Corridas</button>
+							</div>
+						        
+							<div class="row" ng-repeat="corredor in corredores">
+							        <div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>ID:</strong> {{corredor.idcorredor}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Nome:</strong> {{corredor.nome}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Nascimento:</strong> {{corredor.datanascimento}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Cidade:</strong> {{corredor.cidade}}
+								</div>
+								<div class="col-xs-12 col-sm-12 col-lg-12">
+									<strong>Status:</strong> {{corredor.status}}
+								</div>
+							</div>
+							
+						     
+						</div>
+						
+					   
+	                                         
+	<!-- Gravar Corridas-->
+      <div class="container" ng-show="mostrar_form_corrida">
+	   <div class="row">
+		    <form>
+			    <fieldset>
+					    <div class="form-group">
+							    <label for="nome">Nome da Corrida</label>
+							    <input ng-model="corrida.nome" id="nome" type="text" class="form-control" placeholder="Nome da corrida" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="descricao">Descrição</label>
+							    <input ng-model="corrida.descricao" id="descricao" type="text" class="form-control" placeholder="Descrição da corrida" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="data">Data</label>
+							    <input ng-model="corrida.data" id="data" type="text" class="form-control" placeholder="Data (formato Ano-Mês-Dia)" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="cidade">Cidade</label>
+							    <input ng-model="corrida.cidade" id="cidade" type="text" class="form-control" placeholder="Nome da cidade" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="estado">Estado</label>
+							    <input ng-model="corrida.estado" id="estado" type="text" class="form-control" placeholder="Nome do estado" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="valorinscricao">Valor Inscrição</label>
+							    <input ng-model="corrida.valorinscricao" id="valorinscricao" type="text" class="form-control" placeholder="Exemplo 50.00" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="">Status</label>
+							    <select ng-model="corrida.status" class="form-control">
+									    <option value="Aberta">Aberta</option>
+									    <option value="Confirmada">Confirmada</option>
+							    </select>
+					    </div>
+					    <button ng-click="cadastrar_corrida()" type="submit" class="btn btn-primary">Gravar</button>
+			    </fieldset>
+		    </div>
+	    </form>
+	
+ <!-- Gravar Corridas-->
+	  							
+    </div>
+      
+    <!-- Gravar Corridas-->
+      <div class="container" ng-show="mostrar_form_corredor">
+	   <div class="row">
+		    <form">
+			    <fieldset>
+					    <div class="form-group">
+							    <label for="nome">Nome do Corredor</label>
+							    <input ng-model="corredor.nome" id="nome" type="text" class="form-control" placeholder="Nome do Corredor" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="descricao">Descrição</label>
+							    <input ng-model="corredor.datanascimento" id="datanascimento" type="text" class="form-control" placeholder="Data de nascimento" required>
+					    </div>
+					   
+					    <div class="form-group">
+							    <label for="cidade">Cidade</label>
+							    <input ng-model="corredor.cidade" id="cidade" type="text" class="form-control" placeholder="Nome da cidade" required>
+					    </div>
+					    <div class="form-group">
+							    <label for="estado">Estado</label>
+							    <input ng-model="corredor.estado" id="estado" type="text" class="form-control" placeholder="Nome do estado" required>
+					    </div>
+					    
+					    <div class="form-group">
+							    <label for="">Status</label>
+							    <select ng-model="corrida.status" class="form-control">
+									    <option value="Ativo">Ativo</option>
+									    <option value="Inativo">Inativo</option>
+							    </select>
+					    </div>
+					    <button ng-click="cadastrar_corredor()" type="submit" class="btn btn-primary">Gravar</button>
+			    </fieldset>
+		    </div>
+	    </form>
+	
+ <!-- Gravar Corridas-->
+	  							
+    </div>  
+				
+  </body>
+</html>
